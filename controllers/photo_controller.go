@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-	"log"
 	"net/http"
 	"path/filepath"
 
@@ -79,7 +77,6 @@ func AddPhoto(c *gin.Context) {
 	file, err := c.FormFile("photo_file")
 
 	if err != nil {
-		log.Println(err.Error())
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"status": "fail",
 			"msg":    "Please provide photo file",
@@ -88,10 +85,10 @@ func AddPhoto(c *gin.Context) {
 		return
 	}
 
-	filename := uuid.NewString() + filepath.Base(file.Filename)
-	fmt.Println(filename)
+	filename := "/storage/photos/" + uuid.NewString() + filepath.Ext(file.Filename)
+	destination := filepath.Dir(filename)
 
-	errFile := c.SaveUploadedFile(file, filename)
+	errFile := c.SaveUploadedFile(file, destination)
 
 	if errFile != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
@@ -105,7 +102,7 @@ func AddPhoto(c *gin.Context) {
 	photo := models.Photo{
 		Title:    c.PostForm("title"),
 		Caption:  c.PostForm("caption"),
-		PhotoUrl: filename,
+		PhotoUrl: destination,
 		UserID:   userID,
 	}
 

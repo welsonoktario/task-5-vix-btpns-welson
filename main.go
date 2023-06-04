@@ -21,7 +21,7 @@ func main() {
 
 	router := router.InitRoutes()
 	router.MaxMultipartMemory = 8 << 20
-	router.Static("/assets", "./storage/photos")
+	router.Static("/assets/photos", "./storage/photos")
 
 	router.Run(":8000")
 }
