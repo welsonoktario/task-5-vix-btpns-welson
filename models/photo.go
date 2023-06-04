@@ -1,17 +1,21 @@
 package models
 
 import (
+	"time"
+
 	"github.com/asaskevich/govalidator"
 	"gorm.io/gorm"
 )
 
 type Photo struct {
-	gorm.Model
+	ID       uint   `gorm:"primary_key" json:"id"`
 	Title    string `json:"title"`
 	Caption  string `json:"caption"`
 	PhotoUrl string `json:"photo_url"`
 	UserID   uint   `json:"user_id"`
 	// User     User   `json:"user"`
+	CreatedAt time.Time `json:"-"`
+	UpdatedAt time.Time `json:"-"`
 }
 
 func (photo *Photo) BeforeCreate(tx *gorm.DB) (err error) {

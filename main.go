@@ -3,8 +3,9 @@ package main
 import (
 	"log"
 
-	"github.com/asaskevich/govalidator"
 	"github.com/joho/godotenv"
+	"github.com/welsonoktario/task-5-vix-btpns-welsonoktario/database"
+	"github.com/welsonoktario/task-5-vix-btpns-welsonoktario/router"
 )
 
 func main() {
@@ -13,5 +14,14 @@ func main() {
 		log.Fatal("Error loading .env file")
 	}
 
-	govalidator.SetFieldsRequiredByDefault(true)
+	// govalidator.SetFieldsRequiredByDefault(true)
+
+	database.ConnectDatabase()
+	database.MigrateDatabase()
+
+	router := router.InitRoutes()
+	router.MaxMultipartMemory = 8 << 20
+	router.Static("/assets", "./storage/photos")
+
+	router.Run(":8000")
 }
